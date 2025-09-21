@@ -1,5 +1,3 @@
-# Byte-Busters
-
 # 🏭 Smart Manufacturing Assistant
 
 [![YouTube Demo](https://img.shields.io/badge/Demo-YouTube-red?logo=youtube)](https://youtu.be/WmHZmkz3LI4)

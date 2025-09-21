@@ -1,0 +1,268 @@
+{
+  "info": {
+    "name": "Manufacturing Management API",
+    "description": "Complete API collection for testing manufacturing system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"manager\"\n}"
+            },
+            "url": "{{baseUrl}}/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{baseUrl}}/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('token', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Manufacturing Orders",
+      "item": [
+        {
+          "name": "Get All Manufacturing Orders",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/manufacturing-orders"
+          }
+        },
+        {
+          "name": "Create Manufacturing Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mo_number\": \"MO004\",\n  \"product_id\": 1,\n  \"quantity\": 5,\n  \"start_date\": \"2024-01-20\",\n  \"end_date\": \"2024-01-25\",\n  \"assignee_id\": 1\n}"
+            },
+            "url": "{{baseUrl}}/manufacturing-orders"
+          }
+        },
+        {
+          "name": "Update MO Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\"\n}"
+            },
+            "url": "{{baseUrl}}/manufacturing-orders/1/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Work Orders",
+      "item": [
+        {
+          "name": "Get All Work Orders",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/work-orders"
+          }
+        },
+        {
+          "name": "Create Work Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"wo_number\": \"WO006\",\n  \"mo_id\": 1,\n  \"step_name\": \"Quality Check\",\n  \"assignee_id\": 2,\n  \"work_center_id\": 4\n}"
+            },
+            "url": "{{baseUrl}}/work-orders"
+          }
+        },
+        {
+          "name": "Update WO Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"comments\": \"Work completed successfully\"\n}"
+            },
+            "url": "{{baseUrl}}/work-orders/1/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products & BOM",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/products"
+          }
+        },
+        {
+          "name": "Get BOM for Product",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/bom/1?mo_quantity=10"
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Product\",\n  \"type\": \"finished\",\n  \"unit\": \"pcs\",\n  \"cost\": 100.00,\n  \"min_qty\": 5,\n  \"max_qty\": 50,\n  \"current_stock\": 20\n}"
+            },
+            "url": "{{baseUrl}}/products"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stock Management",
+      "item": [
+        {
+          "name": "Get Stock Ledger",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/stock-ledger"
+          }
+        },
+        {
+          "name": "Stock Adjustment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": 4,\n  \"quantity\": 50,\n  \"notes\": \"Stock replenishment\"\n}"
+            },
+            "url": "{{baseUrl}}/stock-adjust"
+          }
+        },
+        {
+          "name": "Get Stock Alerts",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/stock-alerts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Work Centers",
+      "item": [
+        {
+          "name": "Get Work Centers",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/work-centers"
+          }
+        },
+        {
+          "name": "Create Work Center",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Work Center\",\n  \"type\": \"machine\",\n  \"capacity\": 2,\n  \"cost_per_hour\": 75.00\n}"
+            },
+            "url": "{{baseUrl}}/work-centers"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics & Reports",
+      "item": [
+        {
+          "name": "Dashboard Analytics",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/analytics/dashboard"
+          }
+        },
+        {
+          "name": "Production Report",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": "{{baseUrl}}/reports/production?start_date=2024-01-01&end_date=2024-12-31"
+          }
+        }
+      ]
+    }
+  ]
+}
